@@ -1,36 +1,6 @@
 """Simple dungeon generator"""
 import random
-
-class Rect(object):
-    def __init__(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-
-    """
-    Check wether if 2 rect overlap or touch
-    """
-    def overlap(self, other) -> bool:
-        if ((self.x + self.w < other.x)
-                or (self.x > other.x + other.w)
-                or (self.y + self.h < other.y)
-                or (self.y > other.y + other.h)):
-            return False
-        else:
-            return True
-
-    """
-    Check if rect A fully contains rect B
-    """
-    def contain(self, other) -> bool:
-        if ((self.x < other.x)
-                and (self.x + self.w > other.x + other.w)
-                and (self.y < other.y)
-                and (self.y + self.h > other.y + other.h)):
-            return True
-        else:
-            return False
+from rect import Rect
 
 """
 Simple dungeon generator
@@ -57,12 +27,17 @@ class Generator(object):
         self.rooms = []
 
     def run(self):
+        self._init_map()
+        self._generate_rooms()
+
+    def _init_map(self):
         # Initially fill map with all walls
         for x in range(self.width):
             self.map.insert(x, [])
             for y in range(self.height):
                 self.map[x].insert(y, self.WALL)
 
+    def _generate_rooms(self):
         # Create rooms
         num_rooms = 0
         for i in range(self.max_room_retries):
